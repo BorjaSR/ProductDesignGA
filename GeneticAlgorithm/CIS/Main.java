@@ -46,6 +46,11 @@ public class Main {
 	private LinkedList<Integer> Results;
     private LinkedList<Integer> Initial_Results;
     
+    private LinkedList<Attribute> AttributesList;
+    private LinkedList<Producer> ProducerList;
+    private LinkedList<CustomerProfile> CustomerProfileList;
+    private LinkedList<CustomerProfile> CustomerProfileListAux;
+    private LinkedList<Integer> NumberCustomerProfile;
 /*
     ' Represents the list of attributes, its possible values, and its possible valuations:
     ' mAttributes(i)(j) = valuation for attribute number i, value number j
@@ -120,4 +125,91 @@ public class Main {
 			System.out.println("");
 		}	
 	}
+	
+	/**Computing the weighted score of the producer
+       prodInd is the index of the producer*/
+	private int computeWSC(Product product, int prodInd)
+	{	int wsc = 0;
+		boolean isTheFavourite;
+		int meScore;
+		int score;
+		int k;
+		int numTies;
+		for(int i = 0; i < Number_CustomerProfile - 1; i++)
+		{
+			for(int j = 0; j < CustomerProfileListAux.get(i).getCustomerProfile().size() - 1; j++)
+			{
+				isTheFavourite = true;
+				numTies = 1;
+				meScore = scoreProduct(i,j,product);
+				k = 0;
+				while(isTheFavourite && k < Number_Producers)
+				{
+					if(k != prodInd)
+					{
+						score = scoreProduct(i,j, ProducerList.get(k).product);
+						if(score > meScore) isTheFavourite = false;
+						else if(score == meScore) numTies += 1;
+					}
+					k++;
+				}
+				/*TODO: When there exists ties we loose some voters because of decimals (undecided voters)*/
+				if(isTheFavourite)
+				{
+					if((j == (CustomerProfileListAux.get(i).getCustomerProfile().size() - 1)) && ((NumberCustomerProfile.get(i) % RESP_PER_GROUP) != 0))
+					{
+						wsc += (NumberCustomerProfile.get(i) % RESP_PER_GROUP) / numTies;
+					}
+					else{
+						wsc += RESP_PER_GROUP / numTies;
+					}
+				}
+					
+			}
+		}
+	
+		return wsc;
+	}
+	
+	/** Computing the score of a product given the customer profile index
+        custProfInd and the product*/
+	private int scoreProduct(int custProfInd, int custSubProfInd, Product product)
+	{
+		int score = 0;
+		for(int i = 0; i < Number_Attributes - 1; i++)
+		{
+			score += scoreAttribute(AttributesList.get(i), CustomerProfileListAux.get(custSubProfInd), product);//////////
+			 // score += scoreAttribute(mAttributes(i), mCustProfAux(custProfInd)(custSubProfInd)(i), product(i))
+		}
+		return score;
+	}
+	
+	
+   
+          
+     
+     	
+	
+	/**Showing the wsc of the rest of products*/
+	private void showWSC(){
+		int wsc;
+		int wscSum = 0;
+		int custSum = 0;
+		for(int i = 0; i < Number_Producers - 1; i++)
+		{
+			wsc = computeWSC(Producers.get(i).product, i);
+			wscSum += wsc;
+		}
+		
+	}
+   
+	/** Auxiliary methods statiscticPD()*/
+	private double computeVariance(double mean){
+		double sqrSum = 0;
+		for(int i = 0; i < NUM_EXECUTIONS; i++){
+			sqrSum += Math.pow( Results.get(i) - mean, 2); 
+		}
+		return (sqrSum/NUM_EXECUTIONS);
+	}
+	
 }
