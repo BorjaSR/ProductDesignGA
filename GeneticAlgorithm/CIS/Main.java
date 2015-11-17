@@ -39,7 +39,7 @@ public class Main {
 	
 	/*GA VARIABLES*/
 	private int BestWSC; /*Stores the best wsc found*/
-   // private HashMap<,Integer> Population;   Private mPopu As List(Of List(Of Integer))
+    private HashMap<Producer,Integer> Population;   //Private mPopu As List(Of List(Of Integer))
     private HashMap<String,Integer> Fitness; /*mFitness(i) = wsc of mPopu(i)*/
     
 	/* STATISTICAL VARIABLES*/
@@ -126,8 +126,108 @@ public class Main {
 		}	
 	}
 	
-	/**Computing the weighted score of the producer
-       prodInd is the index of the producer*/
+	/**Creating the initial population*/
+	private void createInitPopu(){
+		
+	}
+	
+	
+	private int scoreAttribute(int numOfValsOfAttr, int valOfAttrCust, int valOfAttrProd) throws Exception
+	{
+		int score = 0;
+		switch(numOfValsOfAttr){
+			case 2: {
+				if(valOfAttrCust == valOfAttrProd) score = 10;
+				else score = 0;
+			}
+			break;
+			case 3: {
+				if(valOfAttrCust == valOfAttrProd) score = 10;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 1) score = 5;
+				else score = 0;
+			} break;
+			case 4: {
+				if(valOfAttrCust == valOfAttrProd) score = 10;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 1) score = 6;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 2) score = 2;
+				else score = 0;
+			} break;
+			case 5: {
+				if(valOfAttrCust == valOfAttrProd) score = 10;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 1) score = 6;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 2) score = 2;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 3) score = 1;
+				else score = 0;
+			} break;
+			case 11: {
+				if(valOfAttrCust == valOfAttrProd) score = 10;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 1) score = 8;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 2) score = 6;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 3) score = 4;
+				else if(Math.abs(valOfAttrCust - valOfAttrProd) == 4) score = 2;
+				else score = 0;
+			} break;
+			default: throw new Exception("Error in scoreAttribute() function: " +
+                    "Number of values of the attribute unexpected");
+		}
+		return score;
+	}
+ 
+	/** Creates a deep copy of a List(Of Integer)*/
+	private LinkedList<Integer> deepCopy(LinkedList<Integer> toBeCopied)
+	{
+		LinkedList<Integer> c = new LinkedList<Integer>();
+		for(int i = 0; i < toBeCopied.size() - 1; i++)
+		{
+			c.add(toBeCopied.get(i));
+		}
+		return c;
+	}
+	
+	/**Chosing the father in a random way taking into account the fitness*/
+	private int chooseFather(double fitnessSum)
+	{
+		int fatherPos = 0;
+		double rndVal = fitnessSum * Math.random();
+		double accumulator = Fitness.get(fatherPos);
+		while(rndVal > accumulator)
+		{
+			fatherPos += 1;
+			accumulator += Fitness.get(fatherPos);
+		}
+		return fatherPos;
+	}
+
+	/**Method that creates an individual parameter passed mutating individual.
+       The mutation is to add / remove a joint solution.*/
+	private LinkedList<Integer> mutate(LinkedList<Integer> indiv){
+		LinkedList<Integer> mutant = new LinkedList<Integer>();
+		double mutation;
+		int attrVal;
+		
+		mutant = deepCopy(indiv);
+		//with mutant
+			for(int i = 0; i < Number_Attributes; i++)
+			{
+				/*Random value in range [0,100)*/
+				mutation = 100 * Math.random();
+				if(mutation <= MUTATION_PROB)
+				{
+					boolean attrFound = false;
+					while(!attrFound)
+					{
+						attrVal = (int)(Math.floor((AttributesList.get(i)) * Math.random()));
+						if(ProducerList.get(0).AvailableAttribute.get(i)//(attrVal)) attrFound = true;
+					}
+					// .Item(i) = attrVal
+				}
+				
+			}
+		return mutant;
+	}
+	
+	/***Computing the weighted score of the producer
+        prodInd is the index of the producer**/
 	private int computeWSC(Product product, int prodInd)
 	{	int wsc = 0;
 		boolean isTheFavourite;
@@ -171,8 +271,7 @@ public class Main {
 		return wsc;
 	}
 	
-	/** Computing the score of a product given the customer profile index
-        custProfInd and the product*/
+	
 	private int scoreProduct(int custProfInd, int custSubProfInd, Product product)
 	{
 		int score = 0;
@@ -184,12 +283,18 @@ public class Main {
 		return score;
 	}
 	
-	
-   
-          
+	/**Computing the sum of the fitness of all the population*/
+    private int computeFitnessSum()
+    {
+    	int sum = 0;
+    	for(int i = 0; i < Fitness.size() - 1; i++)
+    	{
+    		sum += Fitness.get(i);
+    	}
+    	return sum;
+    }
      
      	
-	
 	/**Showing the wsc of the rest of products*/
 	private void showWSC(){
 		int wsc;
