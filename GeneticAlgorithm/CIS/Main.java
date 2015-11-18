@@ -126,6 +126,133 @@ public class Main {
 		}	
 	}
 	
+	/**Creating available attributes for the producer*/
+	private HashMap<CustomerProfile, Boolean> createAvailable()
+	{
+		HashMap<CustomerProfile, Boolean> availableAttr = new HashMap<CustomerProfile, Boolean>();
+		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
+		
+		/*All producers know the first ATTRIBUTES_KNOWN % of the attributes*/
+		for(int i = 0; i < limit; i++)
+		{
+			availableAttr.get(new LinkedList<Boolean>());
+			for(int j = 0; j < AttributesList.get(i) - 1; j++)
+			{
+				availableAttr.get(i).add(true);
+			}
+		}
+		
+		/*The remaining attributes are only known by SPECIAL_ATTRIBUTES % producers*/
+		for(int i = limit; i < Number_Attributes; i++)
+		{
+			availableAttr.add(new LinkedList<Boolean>());
+			availableAttr.get(i).add(true);
+			double rndVal = Math.random();
+			for(int j = 1; j < AttributesList.get(i) - 1; j++)
+			{
+				if(rndVal < (SPECIAL_ATTRIBUTES /100) && Math.random() < 0.5)
+				{
+					/* Furthermore, with a 50% of probabilities it can know this attribute*/
+                    availableAttr.get(i).add(true);					
+				}
+				else 
+				{
+					availableAttr.get(i).add(false);					
+				}
+			}
+		}
+		return availableAttr;
+		
+	}
+
+	
+	/**Creating a random product*/
+	private LinkedList<Integer> createRndProduct(HashMap<CustomerProfile, Boolean> availableAttr)
+	{
+		LinkedList<Integer> product = new LinkedList<Integer>();
+		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
+		int attrVal;
+		for(int i = 0; i < limit; i++)
+		{
+			attrVal = (int)(Math.floor(AttributesList.get(i) * Math.random()));
+			product.add(attrVal);
+		}
+		
+		for(int i = limit; i < Number_Attributes; i++)
+		{
+			boolean attrFound = false;
+			while(!attrFound)
+			{
+				attrVal = (int)(Math.floor(AttributesList.get(i) * Math.random()));
+				if(availableAttr.get(i)(attrVal)) attrFound = true;
+			}
+			product.add(attrVal);
+		}
+		return product;
+	}
+	
+	
+	/**Creating a product near various customer profiles*/
+	private LinkedList<Integer> createNearProduct(HashMap<CustomerProfile, Boolean> availableAttr, int nearCustProfs)
+	{
+		/*TODO: improve having into account the sub-profiles*/
+		LinkedList<Integer> product = new LinkedList<Integer>();
+		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
+		int attrVal;
+		LinkedList<Integer> custProfsInd = new LinkedList<Integer>();
+		
+		for(int i = 1; i < nearCustProfs; i++)
+		{
+			custProfsInd.add((int) Math.floor(Number_CustomerProfile * Math.random()));
+		}
+		for(int i = 0; i < Number_Attributes; i++)
+		{
+			attrVal = chooseAttribute(i, custProfsInd, availableAttr);
+			product.add(attrVal);
+		}
+		return product;
+	}
+	 
+ 	/**Chosing an attribute near to the customer profiles given*/
+	private int chooseAttribute(int attrInd, LinkedList<CustomerProfile> custProfInd, HashMap<CustomerProfile, Boolean> availableAttr)
+	{
+		int attrVal;
+		LinkedList<Integer> possibleAttr;
+		for(int i = 0; i < AttributesList.size() - 1; i++)
+		{
+			/*We count the valoration of each selected profile for attribute attrInd value i*/
+			possibleAttr.add(0);
+			for(int j = 0; j < custProfInd.size() - 1; j++)
+			{
+				possibleAttr.get(i) += CustomerProfileList(custProfsInd(j))(attrInd)(i);
+			}
+		}
+		attrVal = getMaxAttrVal(attrInd,possibleAttr, availableAttr);
+		
+		return attrVal;
+	}
+	
+	
+	/**Chosing the attribute with the maximum score for the customer profiles given*/
+	private int getMaxAttrVal(int attrInd, LinkedList<Integer> possibleAttr, HashMap<CustomerProfile, Boolean> availableAttr)
+	//ByRef possibleAttr As List(Of Decimal), _
+    //ByVal availableAttr As List(Of List(Of Boolean)
+	{
+		int attrVal = -1;
+		double max = -1;
+		for(int i = 0; i< possibleAttr.size(); i++)
+		{
+			if(availableAttr.get(attrInd)(i) && possibleAttr.get(i) > max) /*If availableAttr(attrInd)(i) AndAlso possibleAttr(i) > max*/
+			{
+				max = possibleAttr.get(i);
+				attrVal = i;
+			}
+		}
+		
+		return attrVal;
+	}
+	 
+	
 	/**Creating the initial population*/
 	private void createInitPopu(){
 		
