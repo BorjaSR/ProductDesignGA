@@ -137,7 +137,7 @@ public class Main {
 				Cell cell = (Cell) ((List) sheetData.get(i)).get(0);
 				if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 					number_valors = cell.getNumericCellValue() + 1;
-					AttributesTotal.add(new Attribute("Attribute " + AttributesTotal.size(), MIN_VAL, (int)number_valors-1));
+					AttributesTotal.add(new Attribute("Attribute " + (AttributesTotal.size()+1), MIN_VAL, (int)number_valors-1));
 				} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
 					if(cell.getRichStringCellValue().equals("MMM"))
 						break;
