@@ -16,7 +16,7 @@ public class Main {
 												 * % of attributes known for all
 												 * producers
 												 */
-	static final int SPECIAL_ATTRIBUTES = 33; /*
+	static final double SPECIAL_ATTRIBUTES = 40; /*
 												 * % of special attributes known
 												 * for some producers
 												 */
@@ -125,7 +125,7 @@ public class Main {
 	
 		generateAttributeValor(sheetData);
 //		showAttributes();
-		System.out.print(createAbailableAttributes());
+		showAbailableAttributes(createAbailableAttributes());
 		//showExcelData(sheetData);
 	}
 
@@ -157,6 +157,17 @@ public class Main {
 			System.out.println(TotalAttributes.get(k).getName());
 			System.out.println(TotalAttributes.get(k).getMIN());
 			System.out.println(TotalAttributes.get(k).getMAX());
+		}
+	}
+	
+	private static void showAbailableAttributes(ArrayList<Attribute> availableAttrs){
+		for(int k = 0; k < availableAttrs.size(); k++){
+			System.out.println(availableAttrs.get(k).getName());
+			System.out.println(availableAttrs.get(k).getMIN());
+			System.out.println(availableAttrs.get(k).getMAX());
+			for(int j = 0; j < availableAttrs.get(k).getAvailableValues().size(); j++){
+				System.out.println(availableAttrs.get(k).getAvailableValues().get(j));
+			}
 		}
 	}
 
@@ -203,8 +214,9 @@ public class Main {
 			for(int j = 0; j < attr.getMAX(); j++){
 				double rnd = Math.random();
 				double rndVal = Math.random();
+				double spcec = SPECIAL_ATTRIBUTES / 100;
 				
-				if(rndVal < (SPECIAL_ATTRIBUTES / 100) && rnd < 0.5)
+				if(rndVal < spcec && rnd < 0.5)
 					values.add(true);
 				else
 					values.add(false);
