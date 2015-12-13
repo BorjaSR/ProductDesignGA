@@ -2,21 +2,22 @@ import java.util.HashMap;
 
 public class Product {
 	
-	public HashMap<Attribute, Integer> Product;
-
+	public HashMap<Attribute, Integer> attributeValue;
+	
+	public Product() {
+		super();
+	}
+	
 	public Product(HashMap<Attribute, Integer> product) {
 		super();
-		Product = product;
+		attributeValue = product;
 	}
 
-	public HashMap<Attribute, Integer> getProduct() {
-		return Product;
+	public HashMap<Attribute, Integer> getAttributeValue() {
+		return attributeValue;
 	}
 
-	public void setProduct(HashMap<Attribute, Integer> product) {
-		Product = product;
+	public void setAttributeValue(HashMap<Attribute, Integer> product) {
+		attributeValue = product;
 	}
-	
-	
-	
 }

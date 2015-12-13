@@ -34,6 +34,7 @@ public class Main {
 											 * profile in groups of
 											 * RESP_PER_GROUP respondents
 											 */
+	static final int NEAR_CUST_PROFS = 4;
 	static final int NUM_EXECUTIONS = 20; /* number of executions */
 
 	// static final String SOURCE = "D:\Pablo\EncuestasCIS.xlsx";
@@ -41,13 +42,14 @@ public class Main {
 	static final int SHEET_POLITICAL_PARTIES = 2;
 	static final String EOF = "EOF";
 
-	public static ArrayList<Attribute> TotalAttributes = new ArrayList<>();
-	private LinkedList<Producer> Producers;
+	private static ArrayList<Attribute> TotalAttributes = new ArrayList<>();
+	private static ArrayList<Producer> Producers;
+	private static ArrayList<CustomerProfile> CustomerProfiles;
 
 	/* INPUT VARIABLES */
-	private int Number_Attributes; /* Number of attributes */
-	private int Number_Producers; /* Number of producers */
-	private int Number_CustomerProfile; /* Number of customer profiles */
+	private static int Number_Attributes; /* Number of attributes */
+	private static int Number_Producers = 10; /* Number of producers */
+	private static int Number_CustomerProfile = 100; //TODO tiene que venir del excel /* Number of customer profiles */
 
 	/* GA VARIABLES */
 	private int BestWSC; /* Stores the best wsc found */
@@ -124,8 +126,11 @@ public class Main {
 		}
 	
 		generateAttributeValor(sheetData);
+		
+		generateProducres();
+		showProducers();
 //		showAttributes();
-		showAbailableAttributes(createAbailableAttributes());
+//		showAbailableAttributes(createAbailableAttributes());
 		//showExcelData(sheetData);
 	}
 
@@ -170,6 +175,17 @@ public class Main {
 			}
 		}
 	}
+	
+	private static void showProducers(){
+		for(int i = 0; i < Producers.size(); i++){
+			Producer p = Producers.get(i);
+			System.out.println("PRODUCTOR " + (i+1));
+			for(int j = 0; j < TotalAttributes.size(); j++){
+				System.out.print(TotalAttributes.get(j).getName());
+				System.out.println(":  Value -> " + p.getProduct().getAttributeValue().get(TotalAttributes.get(j)));
+			}
+		}
+	}
 
 	private static void showExcelData(List sheetData) {
 		// Iterates the data and print it out to the console.
@@ -189,6 +205,16 @@ public class Main {
 				}
 			}
 			System.out.println("");
+		}
+	}
+	
+	private static void generateProducres(){
+		Producers = new ArrayList<>();
+		for (int i = 0; i < Number_Producers; i++){
+			Producer new_producer = new Producer();
+			new_producer.setAvailableAttribute(createAbailableAttributes());
+			new_producer.setProduct(createProduct(new_producer.getAvailableAttribute()));
+			Producers.add(new_producer);
 		}
 	}
 	
@@ -214,9 +240,8 @@ public class Main {
 			for(int j = 0; j < attr.getMAX(); j++){
 				double rnd = Math.random();
 				double rndVal = Math.random();
-				double spcec = SPECIAL_ATTRIBUTES / 100;
 				
-				if(rndVal < spcec && rnd < 0.5)
+				if(rndVal < (SPECIAL_ATTRIBUTES / 100) && rnd < 0.5)
 					values.add(true);
 				else
 					values.add(false);
@@ -227,71 +252,30 @@ public class Main {
 		
 		return availableAttributes;
 	}
-//	private HashMap<CustomerProfile, Boolean> createAvailable()
-//	{
-//		HashMap<CustomerProfile, Boolean> availableAttr = new HashMap<CustomerProfile, Boolean>();
-//		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
-//		
-//		/*All producers know the first ATTRIBUTES_KNOWN % of the attributes*/
-//		for(int i = 0; i < limit; i++)
-//		{
-//			availableAttr.get(new LinkedList<Boolean>());
-//			for(int j = 0; j < AttributesList.get(i) - 1; j++)
-//			{
-//				availableAttr.get(i).add(true);
-//			}
-//		}
-//		
-//		/*The remaining attributes are only known by SPECIAL_ATTRIBUTES % producers*/
-//		for(int i = limit; i < Number_Attributes; i++)
-//		{
-//			availableAttr.add(new LinkedList<Boolean>());
-//			availableAttr.get(i).add(true);
-//			double rndVal = Math.random();
-//			for(int j = 1; j < AttributesList.get(i) - 1; j++)
-//			{
-//				if(rndVal < (SPECIAL_ATTRIBUTES /100) && Math.random() < 0.5)
-//				{
-//					/* Furthermore, with a 50% of probabilities it can know this attribute*/
-//                    availableAttr.get(i).add(true);					
-//				}
-//				else 
-//				{
-//					availableAttr.get(i).add(false);					
-//				}
-//			}
-//		}
-//		return availableAttr;
-//		
-//	}
-//
-//	
-//	/**Creating a random product*/
-//	private LinkedList<Integer> createRndProduct(HashMap<CustomerProfile, Boolean> availableAttr)
-//	{
-//		LinkedList<Integer> product = new LinkedList<Integer>();
-//		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
-//		int attrVal;
-//		for(int i = 0; i < limit; i++)
-//		{
-//			attrVal = (int)(Math.floor(AttributesList.get(i) * Math.random()));
-//			product.add(attrVal);
-//		}
-//		
-//		for(int i = limit; i < Number_Attributes; i++)
-//		{
-//			boolean attrFound = false;
-//			while(!attrFound)
-//			{
-//				attrVal = (int)(Math.floor(AttributesList.get(i) * Math.random()));
-//				if(availableAttr.get(i)(attrVal)) attrFound = true;
-//			}
-//			product.add(attrVal);
-//		}
-//		return product;
-//	}
-//	
-//	
+	
+	private static Product createProduct(ArrayList<Attribute> abailableAttrs){
+		Product product = new Product();
+		ArrayList<Double> customNearProfs = new ArrayList<>();
+		for (int i = 0; i < NEAR_CUST_PROFS; i++){
+			customNearProfs.add(Math.floor(Number_CustomerProfile * Math.random()));
+		}
+		
+		HashMap<Attribute, Integer> attrValues = new HashMap<>();
+		
+		for(int j = 0; j < TotalAttributes.size(); j++){
+			attrValues.put(TotalAttributes.get(j), chooseAttribute(j, customNearProfs, abailableAttrs));
+		}
+		product.setAttributeValue(attrValues);
+		return product;
+	}
+	
+	//TODO
+	private static int chooseAttribute(int i, ArrayList<Double> customerProfile, ArrayList<Attribute> abailableAttributes){
+		
+		return 0;
+	}
+	
+	
 //	/**Creating a product near various customer profiles*/
 //	private LinkedList<Integer> createNearProduct(HashMap<CustomerProfile, Boolean> availableAttr, int nearCustProfs)
 //	{

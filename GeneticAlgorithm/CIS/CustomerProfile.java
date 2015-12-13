@@ -1,20 +1,23 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomerProfile {
 	
-	public HashMap<Attribute, Integer> CustomerProfile;
+	private ArrayList<Attribute> scoreAttributes;
+
+	public CustomerProfile(ArrayList<Attribute> scoreAttributes) {
+		super();
+		this.scoreAttributes = scoreAttributes;
+	}
+
+	public ArrayList<Attribute> getScoreAttributes() {
+		return scoreAttributes;
+	}
+
+	public void setScoreAttributes(ArrayList<Attribute> scoreAttributes) {
+		this.scoreAttributes = scoreAttributes;
+	}
 	
-		public CustomerProfile(HashMap<Attribute, Integer> customerProfile) {
-			super();
-			CustomerProfile = customerProfile;
-		}
-
-		public HashMap<Attribute, Integer> getCustomerProfile() {
-			return CustomerProfile;
-		}
-
-		public void setCustomerProfile(HashMap<Attribute, Integer> customerProfile) {
-			CustomerProfile = customerProfile;
-		}
+	
 }
 

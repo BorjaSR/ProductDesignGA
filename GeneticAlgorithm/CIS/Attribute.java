@@ -6,6 +6,7 @@ public class Attribute {
 	public int MIN;
 	public int MAX;
 	private ArrayList<Boolean> availableValues;
+	private ArrayList<Integer> scoreValues;
 	
 	public Attribute(String name, int mIN, int mAX) {
 		super();
@@ -45,5 +46,14 @@ public class Attribute {
 		this.availableValues = values;
 	}
 
+	public ArrayList<Integer> getScoreValues() {
+		return scoreValues;
+	}
+
+	public void setScoreValues(ArrayList<Integer> scoreValues) {
+		this.scoreValues = scoreValues;
+	}
+
+	
 	
 }
