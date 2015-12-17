@@ -44,7 +44,7 @@ public class Main {
 
 	private static ArrayList<Attribute> TotalAttributes = new ArrayList<>();
 	private static ArrayList<Producer> Producers;
-	private static ArrayList<CustomerProfile> CustomerProfiles;
+	//private static ArrayList<CustomerProfile> CustomerProfiles;
 
 	/* INPUT VARIABLES */
 	private static int Number_Attributes; /* Number of attributes */
@@ -54,7 +54,7 @@ public class Main {
 	/* GA VARIABLES */
 	private int BestWSC; /* Stores the best wsc found */
 	private HashMap<Producer,Integer> Population;   //Private mPopu As List(Of List(Of Integer))
-	private HashMap<String, Integer> Fitness; /*
+	private /*HashMap<String,*/ ArrayList<Integer> Fitness; /*
 												 * mFitness(i) = wsc of mPopu(i)
 												 */
 
@@ -62,7 +62,7 @@ public class Main {
 	private LinkedList<Integer> Results;
 	private LinkedList<Integer> Initial_Results;
    
-    private LinkedList<Producer> ProducerList;
+   // private LinkedList<Producer> ProducerList;
     private LinkedList<CustomerProfile> CustomerProfileList;
     private LinkedList<CustomerProfile> CustomerProfileListAux;
     private LinkedList<Integer> NumberCustomerProfile;
@@ -114,7 +114,7 @@ public class Main {
 	
 		generateAttributeValor(sheetData);
 		
-		generateProducres();
+		generateProducers();
 		showProducers();
 //		showAttributes();
 //		showAbailableAttributes(createAbailableAttributes());
@@ -169,7 +169,7 @@ public class Main {
 		/*MOSTRARLO*/
 	}
 	
-	private void solvePD()
+	private void solvePD() throws Exception
 	{
 		Math.random();
 		generateInput();
@@ -182,10 +182,10 @@ public class Main {
 	}
 
 	/*Solving the PD problem by using a GA*/
-	private void solvePD_GA(){
+	private void solvePD_GA() throws Exception{
 		int generation = 0;
 		HashMap<Producer,Integer> newPopu = new HashMap<Producer,Integer>();
-		HashMap<String,Integer> newFitness = new HashMap<String, Integer>();
+		ArrayList<Integer> newFitness = new ArrayList<Integer>();
 		createInitPopu();
 		while(generation < NUM_GENERATIONS)
 		{
@@ -198,19 +198,28 @@ public class Main {
 		showWSC();
 	}
 	
-
-	private void showWSC() {
-		// TODO Auto-generated method stub
-		
+	/** Método que dada la población original y una nueva población elige la siguente
+    ' generación de individuos. Actualizo la mejor solución encontrada en caso de mejorarla.*/
+	 private HashMap<Producer, Integer> tournament(HashMap<Producer, Integer> newPopu, ArrayList<Integer> newFitness) {
+		HashMap<Producer, Integer> nextGeneration = new HashMap<Producer, Integer>();
+/*		for(int i = 0; i < NUM_POPULATION; i++)
+		{
+			if(Fitness.get(i) >= newFitness.get(i)) nextGeneration.put(deepCopy(Population.get(i)),value);
+			// An old individual cannot improve the fitness
+			else 
+				nextGeneration.put(deepCopy(newPopu.get(i),value);
+				Fitness.get(i) = newFitness.get(i); // We update the fitness of the new individual
+				if(newFitness.get(i) > BestWSC)
+				{
+					BestWSC = newFitness.get(i);
+					Producers.get(0).getProduct() = deepCopy(newPopu.get(i));
+				}
+		}*/
+		return nextGeneration;
 	}
 
-	private HashMap<Producer, Integer> tournament(HashMap<Producer, Integer> newPopu,
-			HashMap<String, Integer> newFitness) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	private HashMap<Producer, Integer> createNewPopu(HashMap<String, Integer> fitness2) {
+	private HashMap<Producer, Integer> createNewPopu(ArrayList<Integer> fitness2) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -218,24 +227,24 @@ public class Main {
 	// Creating the attributes and the possible values of them
 	private static void generateAttributeValor(List sheetData) {
 
-		int MIN_VAL = 1;
-		
-		double number_valors = 0.0;
-		for (int i = 4; i < sheetData.size(); i++) {
-			// System.out.println("Celda [" + i + ", 0]: ");
+			int MIN_VAL = 1;
+			
+			double number_valors = 0.0;
+			for (int i = 4; i < sheetData.size(); i++) {
+				// System.out.println("Celda [" + i + ", 0]: ");
 
-			if (number_valors == 0) {
-				Cell cell = (Cell) ((List) sheetData.get(i)).get(0);
-				if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-					number_valors = cell.getNumericCellValue() + 1;
-					TotalAttributes.add(new Attribute("Attribute " + (TotalAttributes.size()+1), MIN_VAL, (int)number_valors-1));
-				} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-					if(cell.getRichStringCellValue().equals("MMM"))
-						break;
+				if (number_valors == 0) {
+					Cell cell = (Cell) ((List) sheetData.get(i)).get(0);
+					if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+						number_valors = cell.getNumericCellValue() + 1;
+						TotalAttributes.add(new Attribute("Attribute " + (TotalAttributes.size()+1), MIN_VAL, (int)number_valors-1));
+					} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+						if(cell.getRichStringCellValue().equals("MMM"))
+							break;
+					}
 				}
+				number_valors--;
 			}
-			number_valors--;
-		}
 	}
 	
 	private static void showAttributes(){
@@ -267,7 +276,7 @@ public class Main {
 			}
 		}
 	}
-
+	
 	private static void showExcelData(List sheetData) {
 		// Iterates the data and print it out to the console.
 		for (int i = 0; i < sheetData.size(); i++) {
@@ -289,11 +298,12 @@ public class Main {
 		}
 	}
 	
-	private static void generateProducres(){
+	/**Generating the producers*/
+	private static void generateProducers(){
 		Producers = new ArrayList<>();
 		for (int i = 0; i < Number_Producers; i++){
 			Producer new_producer = new Producer();
-			new_producer.setAvailableAttribute(createAbailableAttributes());
+			new_producer.setAvailableAttribute(createAvailableAttributes());
 			new_producer.setProduct(createProduct(new_producer.getAvailableAttribute()));
 			Producers.add(new_producer);
 		}
@@ -310,7 +320,7 @@ public class Main {
 			for(int j = 0; j < attr.getMAX(); j++){
 				values.add(true);
 			}
-			attr.setAvailableValues(values);
+			attr.setavailableValues(values);
 			availableAttributes.add(attr);
 		}
 		
@@ -327,14 +337,14 @@ public class Main {
 				else
 					values.add(false);
 			}
-			attr.setAvailableValues(values);
+			attr.setavailableValues(values);
 			availableAttributes.add(attr);
 		}
 		
 		return availableAttributes;
 	}
 	
-	private static Product createProduct(ArrayList<Attribute> abailableAttrs){
+	private static Product createProduct(ArrayList<Attribute> availableAttrs){
 		Product product = new Product(new HashMap<Attribute,Integer>());
 		ArrayList<Double> customNearProfs = new ArrayList<>();
 		for (int i = 0; i < NEAR_CUST_PROFS; i++){
@@ -344,67 +354,17 @@ public class Main {
 		HashMap<Attribute, Integer> attrValues = new HashMap<>();
 		
 		for(int j = 0; j < TotalAttributes.size(); j++){
-			attrValues.put(TotalAttributes.get(j), chooseAttribute(j, customNearProfs, abailableAttrs));
+			attrValues.put(TotalAttributes.get(j), chooseAttribute(j, customNearProfs, availableAttrs));
 		}
 		product.setAttributeValue(attrValues);
 		return product;
 	}
 	
-	//TODO
-	private static int chooseAttribute(int i, ArrayList<Double> customerProfile, ArrayList<Attribute> abailableAttributes){
-		
-		return 0;
-	}
-	
-	/**Dividing the customer profiles into sub-profiles
-	 * @throws Exception */
-	private void divideCustomerProfile() throws Exception{
-		int numOfSubProfile;
-		CustomerProfileListAux = new LinkedList<CustomerProfile>();
-		for(int i = 0; i < Number_CustomerProfile - 1; i++)
-		{
-			CustomerProfileListAux.add(new CustomerProfile(new HashMap<Attribute,Integer>()));
-			numOfSubProfile = CustomerProfileList.get(i).getCustomerProfile().size() / RESP_PER_GROUP;
-			if((CustomerProfileList.get(i).getCustomerProfile().size() % RESP_PER_GROUP) != 0)
-			{
-				numOfSubProfile++;
-			}	
-			for(int j = 0; j < numOfSubProfile - 1; j++) //We divide into sub-profiles
-			{
-				//CustomerProfileListAux.get(i).getCustomerProfile().put();
-				for(int k = 0; k < Number_Attributes - 1; k++) //Each of the sub-profiles choose a value for each of the attributes
-				{
-					CustomerProfileListAux.get(i).getCustomerProfile().put(TotalAttributes.get(j),chooseValueForAttribute(i, k));
-				}
-			}
-		}
-	}
-	
-	
-//	/**Creating a product near various customer profiles*/
-//	private LinkedList<Integer> createNearProduct(HashMap<CustomerProfile, Boolean> availableAttr, int nearCustProfs)
-//	{
-//		/*TODO: improve having into account the sub-profiles*/
-//		LinkedList<Integer> product = new LinkedList<Integer>();
-//		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
-//		int attrVal;
-//		LinkedList<Integer> custProfsInd = new LinkedList<Integer>();
-//		
-//		for(int i = 1; i < nearCustProfs; i++)
-//		{
-//			custProfsInd.add((int) Math.floor(Number_CustomerProfile * Math.random()));
-//		}
-//		for(int i = 0; i < Number_Attributes; i++)
-//		{
-//			attrVal = chooseAttribute(i, custProfsInd, availableAttr);
-//			product.add(attrVal);
-//		}
-//		return product;
-//	}
-//	 
+
+ 
 // 	/**Chosing an attribute near to the customer profiles given*/
-//	private int chooseAttribute(int attrInd, LinkedList<CustomerProfile> custProfInd, HashMap<CustomerProfile, Boolean> availableAttr)
-//	{
+	private static int chooseAttribute(int attrInd, ArrayList<Double> customNearProfs, ArrayList<Attribute> availableAttrs)
+	{
 //		int attrVal;
 //		LinkedList<Integer> possibleAttr;
 //		for(int i = 0; i < AttributesList.size() - 1; i++)
@@ -418,8 +378,8 @@ public class Main {
 //		}
 //		attrVal = getMaxAttrVal(attrInd,possibleAttr, availableAttr);
 //		
-//		return attrVal;
-//	}
+		return 0;//attrVal;
+	}
 //	
 //	
 //	/**Chosing the attribute with the maximum score for the customer profiles given*/
@@ -440,9 +400,37 @@ public class Main {
 //		
 //		return attrVal;
 //	}
-	 
+	
+	
+	
+	/**Dividing the customer profiles into sub-profiles
+	 * @throws Exception */
+	private void divideCustomerProfile() throws Exception{
+		int numOfSubProfile;
+		CustomerProfileListAux = new LinkedList<CustomerProfile>();
+		for(int i = 0; i < Number_CustomerProfile - 1; i++)
+		{
+			CustomerProfileListAux.add(new CustomerProfile(new ArrayList<Attribute>()));
+			numOfSubProfile = CustomerProfileList.size() / RESP_PER_GROUP;
+			if((CustomerProfileList.get(i).getScoreAttributes().size() % RESP_PER_GROUP) != 0)
+			{
+				numOfSubProfile++;
+			}	
+			for(int j = 0; j < numOfSubProfile - 1; j++) //We divide into sub-profiles
+			{
+				CustomerProfileListAux.get(i).getScoreAttributes().add(TotalAttributes.get(j));
+				for(int k = 0; k < Number_Attributes - 1; k++) //Each of the sub-profiles choose a value for each of the attributes
+				{
+					CustomerProfileListAux.get(i).getScoreAttributes().get(j).getScoreValues().add(chooseValueForAttribute(i, k));
+					
+				}
+			}
+		}
+	}
+		
+	
 	/**Given an index of a customer profile and the index of an attribute we choose a value
-       for that attribute of the sub-profile having into account the values of the poll*/
+       for that attribute of the sub-profile havv  c cing into account the values of the poll*/
 	private Integer chooseValueForAttribute(int custProfInd, int attrInd) throws Exception {
 		int value = 0;
 		double total = 0;
@@ -450,19 +438,19 @@ public class Main {
 		boolean found = false;
 		double accumulated = 0;
 		
-		for (int i = 0; i < CustomerProfileList.get(custProfInd).getCustomerProfile().get(TotalAttributes.get(attrInd)).SIZE - 1; i++)
+		for (int i = 0; i < CustomerProfileList.get(custProfInd).getScoreAttributes().size() -1; i++)
 		{
-			total += CustomerProfileList.get(custProfInd).getCustomerProfile().get(TotalAttributes.get(attrInd));
+			total += CustomerProfileList.get(custProfInd).getScoreAttributes().get(attrInd).getScoreValues().get(i);
 		}
 		rndVal = total * Math.random();
 		while(!found)
 		{
-			accumulated += CustomerProfileList.get(custProfInd).getCustomerProfile().get(TotalAttributes.get(attrInd));
+			accumulated += CustomerProfileList.get(custProfInd).getScoreAttributes().get(attrInd).getScoreValues().get(value);
 			if(rndVal <= accumulated) found = true;
 			else value++;
 		
 		
-			if (value >=  CustomerProfileList.get(custProfInd).getCustomerProfile().get(TotalAttributes.get(attrInd)).SIZE)
+			if (value >=  CustomerProfileList.get(custProfInd).getScoreAttributes().size())
 				throw new Exception("Error 1 in chooseValueForAttribute() method: Value not found");
 		}
 		
@@ -472,8 +460,74 @@ public class Main {
 
 	/**Creating the initial population*/
 	private void createInitPopu(){
+/*		HashMap<Producer,Integer> mPopu = new HashMap<Producer,Integer>();
+		ArrayList<Integer> mFitness = new ArrayList<Integer>();
 		
+		mPopu.put(deepCopy(Producers.get(0).getProduct().getAttributeValue()), value);
+		mFitness.add(computeWSC(mPopu.get(0),0));
+		BestWSC = mFitness.get(0);
+		
+		for(int i = 0; i < NUM_POPULATION - 1; i++)
+		{
+			if(i % 2 == 0) mPopu.put(createRndProduct(Producers.get(0).getAvailableAttribute()), value); 
+			else mFitness.add(createNearProduct(Producers.get(0).getAvailableAttribute(), (int) ((Number_CustomerProfile * Math.random()) + 1)));
+			
+			if(mFitness.get(i) > BestWSC)
+			{
+				BestWSC = mFitness.get(i);
+				Producers  = deepCopy(mPopu.get(i)); //mProducers(0).Product = deepCopy(mPopu(i))
+			}
+			
+		}
+		*/
 	}
+
+    private Product createRndProduct(ArrayList<Attribute> availableAttribute) {
+    	Product product = new Product();
+		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
+		int attrVal = 0;
+		
+		for(int i = 0; i < limit - 1; i++)
+		{
+			attrVal = (int) ((int) TotalAttributes.get(i).getScoreValues().get(i) * Math.random()); //////////////
+		}
+		
+		for(int i = limit; i < Number_Attributes - 1; i++)
+		{
+			boolean attrFound = false;
+			while(!attrFound)
+			{
+				attrVal = (int) ((int) TotalAttributes.get(i).getScoreValues().get(i) * Math.random()); ////////
+			    if(availableAttribute.get(i).getAvailableValues().get(attrVal)) attrFound = true;
+			}
+			product.getAttributeValue().put(TotalAttributes.get(i), attrVal);
+		}
+		return product;
+	}
+
+    /**Creating a product near various customer profiles*/
+	private Integer createNearProduct(ArrayList<Attribute> availableAttribute, int nearCustProfs) {
+		/*TODO: improve having into account the sub-profiles*/
+		Product product = new Product();
+		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
+		int attrVal = 0;
+//		LinkedList<Integer> custProfsInd = new LinkedList<Integer>();
+//		
+//		for(int i = 1; i < nearCustProfs; i++)
+//		{
+//			custProfsInd.add((int) Math.floor(Number_CustomerProfile * Math.random()));
+//		}
+//		for(int i = 0; i < Number_Attributes; i++)
+//		{
+//			attrVal = chooseAttribute(i, custProfsInd, availableAttr);
+//			product.add(attrVal);
+//		}
+//		return product;
+		return 0;
+	}
+
+   
+	
 	
 	
 	private int scoreAttribute(int numOfValsOfAttr, int valOfAttrCust, int valOfAttrProd) throws Exception
@@ -518,9 +572,9 @@ public class Main {
 	}
  
 	/** Creates a deep copy of a List(Of Integer)*/
-	private LinkedList<Integer> deepCopy(LinkedList<Integer> toBeCopied)
+	private ArrayList<Integer> deepCopy(ArrayList<Integer> toBeCopied)
 	{
-		LinkedList<Integer> c = new LinkedList<Integer>();
+		ArrayList<Integer> c = new ArrayList<Integer>();
 		for(int i = 0; i < toBeCopied.size() - 1; i++)
 		{
 			c.add(toBeCopied.get(i));
@@ -528,6 +582,7 @@ public class Main {
 		return c;
 	}
 	
+	/**Chosing the father in a random way taking into account the fitness*/
 	/**Chosing the father in a random way taking into account the fitness*/
 	private int chooseFather(double fitnessSum)
 	{
@@ -543,7 +598,8 @@ public class Main {
 	}
 
 	/**Method that creates an individual parameter passed mutating individual.
-       The mutation is to add / remove a joint solution.*/
+    The mutation is to add / remove a joint solution.
+	 * @throws Exception */
 //	private LinkedList<Integer> mutate(LinkedList<Integer> indiv){
 //		LinkedList<Integer> mutant = new LinkedList<Integer>();
 //		double mutation;
@@ -570,62 +626,20 @@ public class Main {
 //		return mutant;
 //	}
 	
-	/***Computing the weighted score of the producer
-        prodInd is the index of the producer**/
-//	private int computeWSC(Product product, int prodInd)
-//	{	int wsc = 0;
-//		boolean isTheFavourite;
-//		int meScore;
-//		int score;
-//		int k;
-//		int numTies;
-//		for(int i = 0; i < Number_CustomerProfile - 1; i++)
-//		{
-//			for(int j = 0; j < CustomerProfileListAux.get(i).getCustomerProfile().size() - 1; j++)
-//			{
-//				isTheFavourite = true;
-//				numTies = 1;
-//				meScore = scoreProduct(i,j,product);
-//				k = 0;
-//				while(isTheFavourite && k < Number_Producers)
-//				{
-//					if(k != prodInd)
-//					{
-//						score = scoreProduct(i,j, ProducerList.get(k).product);
-//						if(score > meScore) isTheFavourite = false;
-//						else if(score == meScore) numTies += 1;
-//					}
-//					k++;
-//				}
-//				/*TODO: When there exists ties we loose some voters because of decimals (undecided voters)*/
-//				if(isTheFavourite)
-//				{
-//					if((j == (CustomerProfileListAux.get(i).getCustomerProfile().size() - 1)) && ((NumberCustomerProfile.get(i) % RESP_PER_GROUP) != 0))
-//					{
-//						wsc += (NumberCustomerProfile.get(i) % RESP_PER_GROUP) / numTies;
-//					}
-//					else{
-//						wsc += RESP_PER_GROUP / numTies;
-//					}
-//				}
-//					
-//			}
-//		}
-//	
-//		return wsc;
-//	}
+	
+
 	
 	
-//	private int scoreProduct(int custProfInd, int custSubProfInd, Product product)
-//	{
-//		int score = 0;
-//		for(int i = 0; i < Number_Attributes - 1; i++)
-//		{
-//			score += scoreAttribute(AttributesList.get(i), CustomerProfileListAux.get(custSubProfInd), product);//////////
-//			 // score += scoreAttribute(mAttributes(i), mCustProfAux(custProfInd)(custSubProfInd)(i), product(i))
-//		}
-//		return score;
-//	}
+	private int scoreProduct(int custProfInd, int custSubProfInd, Product product) throws Exception
+	{
+		int score = 0;
+		for(int i = 0; i < Number_Attributes - 1; i++)
+		{
+			score += scoreAttribute(TotalAttributes.get(i).getScoreValues().get(i), CustomerProfileListAux.get(custProfInd).getScoreAttributes().get(custSubProfInd).getScoreValues().get(i), product.getAttributeValue().get(i));//////////
+			 // score += scoreAttribute(mAttributes(i), mCustProfAux(custProfInd)(custSubProfInd)(i), product(i))
+		}
+		return score;
+	}
 	
 	/**Computing the sum of the fitness of all the population*/
     private int computeFitnessSum()
@@ -637,21 +651,73 @@ public class Main {
     	}
     	return sum;
     }
-     
-     	
-	/**Showing the wsc of the rest of products*/
-//	private void showWSC(){
-//		int wsc;
-//		int wscSum = 0;
-//		int custSum = 0;
-//		for(int i = 0; i < Number_Producers - 1; i++)
-//		{
-//			wsc = computeWSC(Producers.get(i).product, i);
-//			wscSum += wsc;
-//		}
-//		
-//	}
-   
+    
+	/**Showing the wsc of the rest of products
+	 * @throws Exception */
+	private void showWSC() throws Exception{
+		int wsc;
+		int wscSum = 0;
+		int custSum = 0;
+		for(int i = 0; i < Number_Producers - 1; i++)
+		{
+			wsc = computeWSC(Producers.get(i).getProduct(), i);
+			wscSum += wsc;
+		}
+		for(int j = 0; j < Number_CustomerProfile - 1; j++)
+		{
+			custSum += NumberCustomerProfile.get(j);
+		}
+		
+		if(wscSum != custSum) throw new Exception("Error in showWSC() method");
+		
+	}
+
+	/***Computing the weighted score of the producer
+    prodInd is the index of the producer
+	 * @throws Exception **/
+	private int computeWSC(Product product, int prodInd) throws Exception {
+		int wsc = 0;
+		boolean isTheFavourite;
+		int meScore;
+    	int score;
+		int k;
+		int numTies;
+		for(int i = 0; i < Number_CustomerProfile - 1; i++)
+		{
+			for(int j = 0; j < CustomerProfileListAux.get(i).getScoreAttributes().size() - 1; j++)
+			{
+				isTheFavourite = true;
+				numTies = 1;
+				meScore = scoreProduct(i,j,product);
+				k = 0;
+				while(isTheFavourite && k < Number_Producers)
+				{
+					if(k != prodInd)
+					{
+						score = scoreProduct(i,j, Producers.get(k).product);
+						if(score > meScore) isTheFavourite = false;
+						else if(score == meScore) numTies += 1;
+					}
+					k++;
+				}
+				/*TODO: When there exists ties we loose some voters because of decimals (undecided voters)*/
+				if(isTheFavourite)
+				{
+					if((j == (CustomerProfileListAux.get(i).getScoreAttributes().size() - 1)) && ((NumberCustomerProfile.get(i) % RESP_PER_GROUP) != 0))
+					{
+						wsc += (NumberCustomerProfile.get(i) % RESP_PER_GROUP) / numTies;
+					}
+					else{
+						wsc += RESP_PER_GROUP / numTies;
+					}
+				}
+					
+			}
+		}
+
+		return wsc;
+	}
+
 	/** Auxiliary methods statiscticPD()*/
 	private double computeVariance(double mean){
 		double sqrSum = 0;

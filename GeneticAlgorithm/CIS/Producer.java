@@ -1,21 +1,25 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Producer {
 	
-	public LinkedList<String> AvailableAttribute;
+	public ArrayList<Attribute> AvailableAttribute;
 	public Product product;
 	
-	public Producer(LinkedList<String> availableAttribute, Product product) {
+	public Producer() {
+		
+	}
+
+	public Producer(ArrayList<Attribute> availableAttribute, Product product) {
 		super();
 		AvailableAttribute = availableAttribute;
 		this.product = product;
 	}
 
-	public LinkedList<String> getAvailableAttribute() {
+	public ArrayList<Attribute> getAvailableAttribute() {
 		return AvailableAttribute;
 	}
 
-	public void setAvailableAttribute(LinkedList<String> availableAttribute) {
+	public void setAvailableAttribute(ArrayList<Attribute> availableAttribute) {
 		AvailableAttribute = availableAttribute;
 	}
 

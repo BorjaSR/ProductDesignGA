@@ -1,38 +1,21 @@
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class CustomerProfile {
 	
-	public HashMap<Attribute, Integer> CustomerProfile;
-<<<<<<< .merge_file_a05456
+	private ArrayList<Attribute> scoreAttributes;
 
-	public CustomerProfile(HashMap<Attribute, Integer> customerProfile) {
+	public CustomerProfile(ArrayList<Attribute> scoreAttributes) {
 		super();
-		CustomerProfile = customerProfile;
+		this.scoreAttributes = scoreAttributes;
 	}
 
-	public HashMap<Attribute, Integer> getCustomerProfile() {
-		return CustomerProfile;
+	public ArrayList<Attribute> getScoreAttributes() {
+		return scoreAttributes;
 	}
 
-	public void setCustomerProfile(HashMap<Attribute, Integer> customerProfile) {
-		CustomerProfile = customerProfile;
+	public void setScoreAttributes(ArrayList<Attribute> scoreAttributes) {
+		this.scoreAttributes = scoreAttributes;
 	}
 	
 	
 }
-=======
-	
-		public CustomerProfile(HashMap<Attribute, Integer> customerProfile) {
-			super();
-			CustomerProfile = customerProfile;
-		}
-
-		public HashMap<Attribute, Integer> getCustomerProfile() {
-			return CustomerProfile;
-		}
-
-		public void setCustomerProfile(HashMap<Attribute, Integer> customerProfile) {
-			CustomerProfile = customerProfile;
-		}
-}
->>>>>>> .merge_file_a08352

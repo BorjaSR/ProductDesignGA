@@ -1,11 +1,13 @@
+import java.util.ArrayList;
 
 public class Attribute {
 	
 	public String name;
 	public int MIN;
 	public int MAX;
+	private ArrayList<Boolean> availableValues;
+	private ArrayList<Integer> scoreValues;
 	
-<<<<<<< .merge_file_a08956
 	public Attribute(String name, int mIN, int mAX) {
 		super();
 		this.name = name;
@@ -32,31 +34,25 @@ public class Attribute {
 	public int getMAX() {
 		return MAX;
 	}
-
-=======
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getMIN() {
-		return MIN;
-	}
-	public void setMIN(int mIN) {
-		MIN = mIN;
-	}
-	public int getMAX() {
-		return MAX;
-	}
->>>>>>> .merge_file_a01496
 	public void setMAX(int mAX) {
 		MAX = mAX;
 	}
 	
-<<<<<<< .merge_file_a08956
-	
-	
-=======
->>>>>>> .merge_file_a01496
+	public ArrayList<Boolean> getAvailableValues() {
+		return availableValues;
+	}
+
+	public void setavailableValues(ArrayList<Boolean> values) {
+		this.availableValues = values;
+	}
+
+	public ArrayList<Integer> getScoreValues() {
+		return scoreValues;
+	}
+
+	public void setScoreValues(ArrayList<Integer> scoreValues) {
+		this.scoreValues = scoreValues;
+	}
+
+
 }
