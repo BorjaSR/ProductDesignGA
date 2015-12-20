@@ -142,7 +142,7 @@ public class Main {
 		Math.random();
 		if (Number_Producers == 0) {}
 		
-		for(int i = 0; i < NUM_EXECUTIONS; i++)
+		for(int i = 0; i < NUM_EXECUTIONS - 1; i++)
 		{
 			if (i != 0) /*We reset myPP and create a new product as the first product*/
 			{
@@ -223,8 +223,9 @@ public class Main {
 	/** Método que dada la población original y una nueva población elige la siguente
     ' generación de individuos. Actualizo la mejor solución encontrada en caso de mejorarla.*/
 	 private ArrayList<Producer> tournament(ArrayList<Producer> newPopu, ArrayList<Integer> newFitness) {
+
 		 ArrayList<Producer> nextGeneration = new ArrayList<Producer>();
-		for(int i = 0; i < NUM_POPULATION; i++)
+		for(int i = 0; i < NUM_POPULATION - 1; i++)
 		{
 			if(Fitness.get(i) >= newFitness.get(i)) nextGeneration.add(deepCopy(Population.get(i).getValuesPopuProducer()).get(index)); ///////////////////
 			// An old individual cannot improve the fitness
@@ -249,10 +250,10 @@ public class Main {
 		ArrayList<Producer> newPopu = new ArrayList<Producer>();
 		int father;
 		int mother;
-		LinkedList<Integer> son;
+		ArrayList<Integer> son;
 		
 		fitness = new ArrayList<Integer>();
-		for(int i = 0; i < NUM_POPULATION; i++)
+		for(int i = 0; i < NUM_POPULATION - 1; i++)
 		{
 			father = chooseFather(fitnessSum);
 			mother = chooseFather(fitnessSum);
@@ -265,8 +266,33 @@ public class Main {
 		return newPopu;
 	}
 
+	/**Método que dado un padre y una madre los cruza para obtener un hijo.
+       Para cada posición del array eligiremos aleatoriamente si el hijo heredará
+       esa posición del padre o de la madre.*/
 	private ArrayList<Integer> breed(int father, int mother) {
-		// TODO Auto-generated method stub
+		ArrayList<Integer> son = new ArrayList<Integer>();
+		/*Random value in range [0,100)*/
+		double crossover = 100 * Math.random();
+		int rndVal;
+		
+		if(crossover <= CROSSOVER_PROB)
+		{
+			for(int i = 0; i < son.size() - 1; i++) //With son
+			{
+				for(int j = 0; j < Number_Attributes - 1; j++)
+				{
+					rndVal = (int) (2 * Math.random()); /*Generamos aleatoriamente un 0 (padre) o un 1 (madre).*/
+					if(rndVal == 0) son.add(Population.get(father).getValuesPopuProducer().get(j));
+					else son.add(Population.get(mother).getValuesPopuProducer().get(j));
+				}
+			}
+		}
+		else
+		{
+			rndVal = (int) (2 * Math.random()); /*Generamos aleatoriamente un 0 (padre) o un 1 (madre).*/
+			if(rndVal == 0) son = deepCopy(Population.get(father).getValuesPopuProducer());
+			else son = deepCopy(Population.get(mother).getValuesPopuProducer());
+		}
 		return null;
 	}
 
@@ -427,7 +453,7 @@ public class Main {
 		}
 		attrVal = getMaxAttrVal(attrInd, possibleAttr, availableAttrs);
 		
-		return 0;//attrVal;
+		return attrVal;
 	}
 
 	/**Chosing the attribute with the maximum score for the customer profiles given*/
@@ -435,7 +461,7 @@ public class Main {
 	{
 		int attrVal = -1;
 		double max = -1;
-		for(int i = 0; i< possibleAttr.size(); i++)
+		for(int i = 0; i< possibleAttr.size() - 1; i++)
 		{
 			if(availableAttr.get(attrInd).getAvailableValues().get(i) && possibleAttr.get(i) > max) 
 			{
@@ -447,8 +473,7 @@ public class Main {
 		return attrVal;
 	}
 	
-	
-	
+		
 	/**Dividing the customer profiles into sub-profiles
 	 * @throws Exception */
 	private void divideCustomerProfile() throws Exception{
@@ -484,7 +509,7 @@ public class Main {
 		boolean found = false;
 		double accumulated = 0;
 		
-		for (int i = 0; i < CustomerProfileList.get(custProfInd).getScoreAttributes().size() -1; i++)
+		for (int i = 0; i < CustomerProfileList.get(custProfInd).getScoreAttributes().size() - 1; i++)
 		{
 			total += CustomerProfileList.get(custProfInd).getScoreAttributes().get(attrInd).getScoreValues().get(i);
 		}
@@ -509,7 +534,7 @@ public class Main {
 		ArrayList<Producer> mPopu = new ArrayList<Producer>();
 		ArrayList<Integer> mFitness = new ArrayList<Integer>();
 		
-		mPopu.add(deepCopy(Producers.get(0).getValuesPopuProducer())); //////////////////////
+		mPopu.add(deepCopy(Producers.get(0).getValuesPopuProducer()).get(index)); //////////////////////
 		mFitness.add(computeWSC(mPopu.get(0).getProduct(),0));
 		BestWSC = mFitness.get(0);
 		
@@ -556,22 +581,21 @@ public class Main {
     /**Creating a product near various customer profiles*/
 	private Integer createNearProduct(ArrayList<Attribute> availableAttribute, int nearCustProfs) {
 		/*TODO: improve having into account the sub-profiles*/
-		Product product = new Product();
+		HashMap<Attribute, Integer> product = new HashMap<Attribute, Integer>();
 		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
 		int attrVal = 0;
-//		LinkedList<Integer> custProfsInd = new LinkedList<Integer>();
-//		
-//		for(int i = 1; i < nearCustProfs; i++)
-//		{
-//			custProfsInd.add((int) Math.floor(Number_CustomerProfile * Math.random()));
-//		}
-//		for(int i = 0; i < Number_Attributes; i++)
-//		{
-//			attrVal = chooseAttribute(i, custProfsInd, availableAttr);
-//			product.add(attrVal);
-//		}
-//		return product;
-		return 0;
+		ArrayList<Integer> custProfsInd = new ArrayList<Integer>();
+		
+		for(int i = 1; i < nearCustProfs; i++)
+		{
+			custProfsInd.add((int) Math.floor(Number_CustomerProfile * Math.random()));
+		}
+		for(int i = 0; i < Number_Attributes - 1; i++)
+		{
+			attrVal = chooseAttribute(i, custProfsInd, availableAttribute);
+			product.put(i, attrVal); ///////////////////////
+		}
+		return product;
 	}
 
 	
@@ -645,29 +669,31 @@ public class Main {
 	/**Method that creates an individual parameter passed mutating individual.
     The mutation is to add / remove a joint solution.
 	 * @throws Exception */
-	private LinkedList<Integer> mutate(ArrayList<Integer> arrayList){
-		LinkedList<Integer> mutant = new LinkedList<Integer>();
-//		double mutation;
-//		int attrVal;
-//		
-//		mutant = deepCopy(indiv);
-//		//with mutant
-//			for(int i = 0; i < Number_Attributes; i++)
-//			{
-//				/*Random value in range [0,100)*/
-//				mutation = 100 * Math.random();
-//				if(mutation <= MUTATION_PROB)
-//				{
-//					boolean attrFound = false;
-//					while(!attrFound)
-//					{
-//						attrVal = (int)(Math.floor((AttributesList.get(i)) * Math.random()));
-//						if(ProducerList.get(0).AvailableAttribute.get(i)//(attrVal)) attrFound = true;
-//					}
-//					// .Item(i) = attrVal
-//				}
-//				
-//			}
+	private ArrayList<Integer> mutate(ArrayList<Integer> indiv){
+		ArrayList<Integer> mutant = new ArrayList<Integer>();
+		double mutation;
+		int attrVal = 0;
+		
+		mutant = deepCopy(indiv);
+		for(int i = 0; i < mutant.size(); i++)//with mutant
+			for(int j = 0; j < Number_Attributes - 1; j++)
+			{
+				/*Random value in range [0,100)*/
+				mutation = 100 * Math.random();
+				if(mutation <= MUTATION_PROB)
+				{
+					boolean attrFound = false;
+					while(!attrFound)
+					{
+						attrVal = (int)(Math.floor(TotalAttributes.get(j).getScoreValues().get(i) * Math.random()));
+						if(Producers.get(0).getAvailableAttribute().get(j).getAvailableValues().get(attrVal)) attrFound = true;
+					}
+					// .Item(i) = attrVal
+					int it = mutant.get(j);
+					it = attrVal;
+				}
+				
+			}
 		return mutant;
 	}
 	
