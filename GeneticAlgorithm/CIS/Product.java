@@ -20,8 +20,4 @@ public class Product {
 	public void setAttributeValue(HashMap<Attribute, Integer> product) {
 		attributeValue = product;
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> version2_stephania16

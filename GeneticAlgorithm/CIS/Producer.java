@@ -1,8 +1,4 @@
 import java.util.ArrayList;
-<<<<<<< HEAD
-import java.util.LinkedList;
-=======
->>>>>>> version2_stephania16
 
 public class Producer {
 	
