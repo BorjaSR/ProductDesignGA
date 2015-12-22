@@ -1,10 +1,14 @@
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.LinkedList;
+=======
+>>>>>>> version2_stephania16
 
 public class Producer {
 	
 	public ArrayList<Attribute> AvailableAttribute;
 	public Product product;
+	public ArrayList<Integer> ValuesPopuProducer;
 	
 	public Producer() {
 		
@@ -32,5 +36,13 @@ public class Producer {
 		this.product = product;
 	}
 	
+	public ArrayList<Integer> getValuesPopuProducer()
+	{
+		return ValuesPopuProducer;
+	}
+	
+	public void setValuesPopuProducer(ArrayList<Integer> valuesPopu) {
+		this.ValuesPopuProducer = valuesPopu;
+	}
 	
 }

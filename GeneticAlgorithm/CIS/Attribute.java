@@ -37,12 +37,20 @@ public class Attribute {
 	public void setMAX(int mAX) {
 		MAX = mAX;
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> version2_stephania16
 	public ArrayList<Boolean> getAvailableValues() {
 		return availableValues;
 	}
 
+<<<<<<< HEAD
 	public void setAbailableValues(ArrayList<Boolean> values) {
+=======
+	public void setavailableValues(ArrayList<Boolean> values) {
+>>>>>>> version2_stephania16
 		this.availableValues = values;
 	}
 
@@ -54,6 +62,11 @@ public class Attribute {
 		this.scoreValues = scoreValues;
 	}
 
+<<<<<<< HEAD
 	
 	
 }
+=======
+
+}
+>>>>>>> version2_stephania16

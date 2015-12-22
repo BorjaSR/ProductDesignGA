@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CustomerProfile {
 	
@@ -20,4 +19,3 @@ public class CustomerProfile {
 	
 	
 }
-
