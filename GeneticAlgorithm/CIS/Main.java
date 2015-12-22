@@ -63,6 +63,9 @@ public class Main {
     private LinkedList<CustomerProfile> CustomerProfileListAux;
     private static LinkedList<Integer> NumberCustomerProfile;
 
+    
+    
+    //Merge
     /*************************************** " AUXILIARY EXCEL METHODS " ***************************************/
     
 	public static void main(String[] args) throws IOException {
