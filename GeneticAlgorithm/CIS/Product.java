@@ -9,7 +9,7 @@ public class Product implements Cloneable{
 	public Product() {
 		super();
 	}
-	
+
 	public Product(HashMap<Attribute, Integer> product) {
 		super();
 		attributeValue = product;
@@ -38,3 +38,6 @@ public class Product implements Cloneable{
 		return product;
 	}
 }
+
+
+

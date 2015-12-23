@@ -17,5 +17,5 @@ public class CustomerProfile {
 		this.scoreAttributes = scoreAttributes;
 	}
 	
-	
 }
+

@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 
 public class Main {
+
 	static final int KNOWN_ATTRIBUTES = 100; /* 100
 												 * % of attributes known for all
 												 * producers
@@ -56,7 +57,7 @@ public class Main {
 	/* STATISTICAL VARIABLES */
 	private LinkedList<Integer> Results;
 	private LinkedList<Integer> Initial_Results;
-   
+
     private static LinkedList<CustomerProfile> CustomerProfileList;
     private LinkedList<CustomerProfile> CustomerProfileListAux;
     private static LinkedList<Integer> NumberCustomerProfile;
@@ -157,6 +158,7 @@ public class Main {
 	/**Solving the PD problem by using a GA*/
 	private void solvePD_GA() throws Exception{
 		int generation = 0;
+
 		ArrayList<Product> newPopu = new ArrayList<Product>();
 		ArrayList<Integer> newFitness = new ArrayList<Integer>();
 		createInitPopu();
@@ -390,6 +392,7 @@ public class Main {
 			for(int j = 0; j < attr.getMAX(); j++){
 				values.add(true);
 			}
+
 			attr.setAvailableValues(values);
 			availableAttributes.add(attr);
 		}
@@ -425,6 +428,7 @@ public class Main {
 		{
 			attrVal = (int) (TotalAttributes.get(i).getScoreValues().get((int) Math.random())); 
 			product.getAttributeValue().put(TotalAttributes.get(i), attrVal); 
+
 		}
 		
 		for(int i = limit; i < Number_Attributes - 1; i++)
@@ -455,7 +459,9 @@ public class Main {
 		for(int i = 0; i < Number_Attributes - 1; i++)
 		{
 			attrVal = chooseAttribute(i, custProfsInd, availableAttribute);
+
 			product.getAttributeValue().put(TotalAttributes.get(i), attrVal);
+
 		}
 		return product;
 	}
@@ -651,6 +657,7 @@ public class Main {
 		}
 		return score;
 	}
+
 	
 	/** Creating a new population*/
 	@SuppressWarnings("unchecked")
@@ -674,7 +681,7 @@ public class Main {
 		
 		return newPopu;
 	}
-	
+
 	/**Computing the sum of the fitness of all the population*/
     private int computeFitnessSum()
     {
