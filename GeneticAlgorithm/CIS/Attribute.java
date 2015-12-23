@@ -1,9 +1,12 @@
+import java.util.ArrayList;
 
 public class Attribute {
 	
 	public String name;
 	public int MIN;
 	public int MAX;
+	private ArrayList<Boolean> availableValues;
+	private ArrayList<Integer> scoreValues;
 	
 	public Attribute(String name, int mIN, int mAX) {
 		super();
@@ -35,4 +38,22 @@ public class Attribute {
 		MAX = mAX;
 	}
 
+	public ArrayList<Boolean> getAvailableValues() {
+		return availableValues;
+	}
+
+	public void setAvailableValues(ArrayList<Boolean> values) {
+		this.availableValues = values;
+	}
+
+	public ArrayList<Integer> getScoreValues() {
+		return scoreValues;
+	}
+
+	public void setScoreValues(ArrayList<Integer> scoreValues) {
+		this.scoreValues = scoreValues;
+	}
+
+	
+	
 }
