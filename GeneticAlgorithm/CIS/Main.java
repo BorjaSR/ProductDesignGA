@@ -660,13 +660,12 @@ public class Main {
 
 	
 	/** Creating a new population*/
-	@SuppressWarnings("unchecked")
 	private ArrayList<Product> createNewPopu(ArrayList<Integer> fitness) throws Exception {
 		int fitnessSum = computeFitnessSum();
 		ArrayList<Product> newPopu = new ArrayList<Product>();
 		int father;
 		int mother;
-		ArrayList<Integer> son;
+		ArrayList<Product> son;
 		
 		fitness = new ArrayList<Integer>();
 		for(int i = 0; i < NUM_POPULATION - 1; i++)
@@ -675,7 +674,7 @@ public class Main {
 			mother = chooseFather(fitnessSum);
 			son = mutate(breed(father,mother));
 			
-			newPopu.get(i).add(son); ////////verificar//////////
+			newPopu.add(son.get(i)); ////////verificar//////////
 			fitness.add(computeWSC(newPopu.get(i),0));
 		}
 		
@@ -710,8 +709,8 @@ public class Main {
 	/**Método que dado un padre y una madre los cruza para obtener un hijo.
     Para cada posición del array eligiremos aleatoriamente si el hijo heredará
     esa posición del padre o de la madre.*/
-	private ArrayList<Integer> breed(int father, int mother) {
-		ArrayList<Integer> son = new ArrayList<Integer>();
+	private ArrayList<Product> breed(int father, int mother) {
+		ArrayList<Product> son = new ArrayList<Product>();
 		/*Random value in range [0,100)*/
 		double crossover = 100 * Math.random();
 		int rndVal;
@@ -723,16 +722,16 @@ public class Main {
 				for(int j = 0; j < Number_Attributes - 1; j++)
 				{
 					rndVal = (int) (2 * Math.random()); /*Generamos aleatoriamente un 0 (padre) o un 1 (madre).*/
-					if(rndVal == 0) son.add(Population.get(father).getValuesPopuProduct().get(j));
-					else son.add(Population.get(mother).getValuesPopuProduct().get(j));
+					if(rndVal == 0) son.add(Population.get(father)); //.getValuesPopuProduct().get(j)
+					else son.add(Population.get(mother)); //.getValuesPopuProduct().get(j)
 				}
 			}
 		}
 		else
 		{
 			rndVal = (int) (2 * Math.random()); /*Generamos aleatoriamente un 0 (padre) o un 1 (madre).*/
-			if(rndVal == 0) son = (Population.get(father)).clone().getValuesPopuProduct();
-			else son = (Population.get(mother)).clone().getValuesPopuProduct();
+			if(rndVal == 0) son.add(Population.get(father).clone()); //son = Population.get(father).clone()
+			else son.add(Population.get(mother).clone()); //son = (Population.get(mother)).clone()
 		}
 		return son;
 	}
@@ -741,12 +740,15 @@ public class Main {
 	/**Method that creates an individual parameter passed mutating individual.
     The mutation is to add / remove a joint solution.
 	 * @throws Exception */
-	private ArrayList<Integer> mutate(ArrayList<Integer> indiv){
-		ArrayList<Integer> mutant = new ArrayList<Integer>();
+	private ArrayList<Product> mutate(ArrayList<Product> indiv){
+		ArrayList<Product> mutant = new ArrayList<Product>();
 		double mutation;
 		int attrVal = 0;
+
+		for (int z = 0; z < indiv.size(); z++){
+			mutant.add(indiv.get(z));
+		}
 		
-		mutant = deepCopy(indiv);
 		for(int i = 0; i < mutant.size() - 1; i++)//with mutant
 			for(int j = 0; j < Number_Attributes - 1; j++)
 			{
@@ -761,9 +763,8 @@ public class Main {
 						if(Producers.get(0).getAvailableAttribute().get(j).getAvailableValues().get(attrVal)) attrFound = true;
 					}
 					// .Item(i) = attrVal
-					@SuppressWarnings("unused")
-					int it = mutant.get(j);
-					it = attrVal;
+					//int it = mutant.get(j);
+					//it = attrVal;
 				}
 				
 			}
