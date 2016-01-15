@@ -59,12 +59,12 @@ public class Main {
 	private LinkedList<Integer> Initial_Results;
 
     private static LinkedList<CustomerProfile> CustomerProfileList;
-    private LinkedList<CustomerProfile> CustomerProfileListAux;
+    private static LinkedList<CustomerProfile> CustomerProfileListAux;
     private static LinkedList<Integer> NumberCustomerProfile;
 
-    /*************************************** " AUXILIARY EXCEL METHODS " ***************************************/
+    /*************************************** " AUXILIARY EXCEL METHODS " * @throws Exception ***************************************/
     
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		// An excel file name. You can create a file name with a full path
 		// information.
 		String filename = "EncuestasCIS.xlsx";
@@ -109,7 +109,8 @@ public class Main {
 		}
 	
 		generateAttributeValor(sheetData);
-		
+		generateCustomerProfiles();
+		divideCustomerProfile();
 		generateProducers();
 		showProducers();
 //		showAttributes();
@@ -146,7 +147,7 @@ public class Main {
 	        closeExcel()
 
 	        genCustomerProfilesNum()*/
-	        divideCustomerProfile();
+	       // divideCustomerProfile();
 
 	     /*   readExcelWorksheet(SHEET_POLITICAL_PARTIES)
 	        genProducers()
@@ -317,12 +318,70 @@ public class Main {
 	
 	
 	/**Creating different customer profiles*/
-	private static void generateCustomerProfiles(){}
+	private static void generateCustomerProfiles(){
+		
+		//Generate 4 random Customer Profile
+		for(int i = 0; i < 4; i++){
+			ArrayList<Attribute> attrs = new ArrayList<>();
+			for(int j = 0; j < TotalAttributes.size(); j++){
+				Attribute attr = TotalAttributes.get(j);
+				ArrayList<Integer> scoreValues = new ArrayList<>();
+				for(int k = 0; k < attr.MAX; k++){
+					int random = (int)(attr.MAX * Math.random());
+					scoreValues.add(random);
+				}
+				attr.setScoreValues(scoreValues);
+				attrs.add(attr);
+			}
+			CustomerProfileList.add(new CustomerProfile(attrs));
+		}
+		
+		//Create 2 mutants for each basic profile
+		for(int i = 0; i < 4; i++){
+			CustomerProfileList.add(mutateCustomerProfile(CustomerProfileList.get(i)));
+			CustomerProfileList.add(mutateCustomerProfile(CustomerProfileList.get(i)));
+		}
+		
+		//Creating 4 isolated profiles
+		for(int i = 0; i < 4; i++){
+			ArrayList<Attribute> attrs = new ArrayList<>();
+			for(int j = 0; j < TotalAttributes.size(); j++){
+				Attribute attr = TotalAttributes.get(j);
+				ArrayList<Integer> scoreValues = new ArrayList<>();
+				for(int k = 0; k < attr.MAX; k++){
+					int random = (int)(attr.MAX * Math.random());
+					scoreValues.add(random);
+				}
+				attr.setScoreValues(scoreValues);
+				attrs.add(attr);
+			}
+			CustomerProfileList.add(new CustomerProfile(attrs));
+		}
+	}
 	
+	private static CustomerProfile mutateCustomerProfile(CustomerProfile customerProfile){
+		CustomerProfile mutant = new CustomerProfile(null);
+		ArrayList<Attribute> attrs = new ArrayList<>();
+		for(int i = 0; i < TotalAttributes.size(); i++){
+			Attribute attr = TotalAttributes.get(i);
+			ArrayList<Integer> scoreValues = new ArrayList<>();
+			for(int k = 0; k < attr.MAX; k++){
+				if(Math.random() < (MUT_PROB_CUSTOMER_PROFILE/ 100) ){
+					int random = (int)(attr.MAX * Math.random());
+					scoreValues.add(random);
+				}else
+					scoreValues.add(customerProfile.getScoreAttributes().get(i).getScoreValues().get(k));
+			}
+			attr.setScoreValues(scoreValues);
+			attrs.add(attr);	
+		}
+		mutant.setScoreAttributes(attrs);
+		return mutant;
+	}
 	
 	/**Dividing the customer profiles into sub-profiles
 	 * @throws Exception */
-	private void divideCustomerProfile() throws Exception{
+	private static void divideCustomerProfile() throws Exception{
 		int numOfSubProfile;
 		CustomerProfileListAux = new LinkedList<CustomerProfile>();
 		for(int i = 0; i < Number_CustomerProfile - 1; i++)
@@ -347,7 +406,7 @@ public class Main {
 	
 	/**Given an index of a customer profile and the index of an attribute we choose a value
     for that attribute of the sub-profile having into account the values of the poll*/
-	private Integer chooseValueForAttribute(int custProfInd, int attrInd) throws Exception {
+	private static Integer chooseValueForAttribute(int custProfInd, int attrInd) throws Exception {
 		int value = 0;
 		double total = 0;
 		double rndVal;
@@ -374,11 +433,11 @@ public class Main {
 		return value;
 	}
 	
-	/**Generating the numbers of customers of each profile*/
+	/*Generating the numbers of customers of each profile
 	private static void genCustomerProfilesNum(){
 		NumberCustomerProfile = new LinkedList<Integer>();
 	}
-	
+	*/
 	/**Creating available attributes for the producer*/
 	private static ArrayList<Attribute> createAvailableAttributes()
 	{
