@@ -47,7 +47,7 @@ public class Main {
 	/* INPUT VARIABLES */
 	private static int Number_Attributes; /* Number of attributes */
 	private static int Number_Producers = 10; /* Number of producers */
-	private static int Number_CustomerProfile = 100; //TODO tiene que venir del excel /* Number of customer profiles */
+	private static int Number_CustomerProfile = 100; //TODO Este  dato lo sacamos de la propia lista -> CustomerProfileList.size()//tiene que venir del excel /* Number of customer profiles */
 
 	/* GA VARIABLES */
 	private int BestWSC; /* Stores the best wsc found */
@@ -58,9 +58,9 @@ public class Main {
 	private LinkedList<Integer> Results;
 	private LinkedList<Integer> Initial_Results;
 
-    private static LinkedList<CustomerProfile> CustomerProfileList;
-    private static LinkedList<CustomerProfile> CustomerProfileListAux;
-    private static LinkedList<Integer> NumberCustomerProfile;
+    private static LinkedList<CustomerProfile> CustomerProfileList = new LinkedList<>();
+    private static LinkedList<CustomerProfile> CustomerProfileListAux = new LinkedList<>();
+    private static LinkedList<Integer> NumberCustomerProfile = new LinkedList<>();
 
     /*************************************** " AUXILIARY EXCEL METHODS " * @throws Exception ***************************************/
     
@@ -384,7 +384,7 @@ public class Main {
 	private static void divideCustomerProfile() throws Exception{
 		int numOfSubProfile;
 		CustomerProfileListAux = new LinkedList<CustomerProfile>();
-		for(int i = 0; i < Number_CustomerProfile - 1; i++)
+		for(int i = 0; i < CustomerProfileList.size(); i++)
 		{
 			CustomerProfileListAux.add(new CustomerProfile(new ArrayList<Attribute>()));
 			numOfSubProfile = CustomerProfileList.get(i).getScoreAttributes().size() / RESP_PER_GROUP;
@@ -530,7 +530,7 @@ public class Main {
 		Product product = new Product(new HashMap<Attribute,Integer>());
 		ArrayList<Integer> customNearProfs = new ArrayList<>();
 		for (int i = 0; i < NEAR_CUST_PROFS; i++){
-			customNearProfs.add((int) Math.floor(Number_CustomerProfile * Math.random()));
+			customNearProfs.add((int) Math.floor(CustomerProfileList.size() * Math.random()));
 		}
 		
 		HashMap<Attribute, Integer> attrValues = new HashMap<>();
@@ -548,7 +548,7 @@ public class Main {
 		int attrVal;
 		ArrayList<Integer> possibleAttr = new ArrayList<Integer>();
 		
-		for(int i = 0; i < TotalAttributes.get(attrInd).getAvailableValues().size() - 1; i++)
+		for(int i = 0; i < availableAttrs.size() - 1; i++)
 		{
 			/*We count the valoration of each selected profile for attribute attrInd value i*/
 			possibleAttr.add(0);
