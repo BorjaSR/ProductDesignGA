@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.apache.poi.ss.usermodel.Cell;
 
 public class Main {
@@ -113,8 +114,8 @@ public class Main {
 		divideCustomerProfile();
 		generateProducers();
 		showProducers();
-//		showAttributes();
-//		showAvailableAttributes(createAbailableAttributes());
+		//showAttributes();
+		//showAvailableAttributes(createAvailableAttributes());
 		//showExcelData(sheetData);
 	}
 	
@@ -433,11 +434,6 @@ public class Main {
 		return value;
 	}
 	
-	/*Generating the numbers of customers of each profile
-	private static void genCustomerProfilesNum(){
-		NumberCustomerProfile = new LinkedList<Integer>();
-	}
-	*/
 	/**Creating available attributes for the producer*/
 	private static ArrayList<Attribute> createAvailableAttributes()
 	{
@@ -535,28 +531,31 @@ public class Main {
 		
 		HashMap<Attribute, Integer> attrValues = new HashMap<>();
 		
-		for(int j = 0; j < TotalAttributes.size(); j++){
-			attrValues.put(TotalAttributes.get(j), chooseAttribute(j, customNearProfs, availableAttrs));
+		for(int j = 0; j < availableAttrs.size(); j++){
+			attrValues.put(availableAttrs.get(j), chooseAttribute(j, customNearProfs, availableAttrs)); //TotalAttributes.get(j) o availableAttrs.get(j)
 		}
 		product.setAttributeValue(attrValues);
 		return product;
 	}
 	
- 	/**Chosing an attribute near to the customer profiles given*/
+	/**Chosing an attribute near to the customer profiles given*/
 	private static int chooseAttribute(int attrInd, ArrayList<Integer> custProfInd, ArrayList<Attribute> availableAttrs)
 	{
 		int attrVal;
+		int possible = 0;
+		
 		ArrayList<Integer> possibleAttr = new ArrayList<Integer>();
 		
-		for(int i = 0; i < availableAttrs.size() - 1; i++)
+		for(int i = 0; i < availableAttrs.get(attrInd).getAvailableValues().size() - 1; i++)
 		{
 			/*We count the valoration of each selected profile for attribute attrInd value i*/
 			possibleAttr.add(0);
+			//possible = possibleAttr.get(i);
 			for(int j = 0; j < custProfInd.size() - 1; j++)
 			{
-				@SuppressWarnings("unused")
-				int possible = possibleAttr.get(i);
+				possible = possibleAttr.get(i);
 				possible += CustomerProfileList.get(custProfInd.get(j)).getScoreAttributes().get(attrInd).getScoreValues().get(i);
+				
 			}
 		}
 		attrVal = getMaxAttrVal(attrInd, possibleAttr, availableAttrs);
@@ -577,7 +576,6 @@ public class Main {
 				attrVal = i;
 			}
 		}
-		
 		return attrVal;
 	}
 	
@@ -877,7 +875,7 @@ public class Main {
 
 	/*************************************** " AUXILIARY METHODS STATISTICSPD()" ***************************************/
 
-	/** Auxiliary methods statiscticPD()*/
+	/**Computing the variance*/
 	private double computeVariance(double mean){
 		double sqrSum = 0;
 		for(int i = 0; i < NUM_EXECUTIONS; i++){
