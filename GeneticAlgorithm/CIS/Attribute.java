@@ -5,14 +5,16 @@ public class Attribute {
 	public String name;
 	public int MIN;
 	public int MAX;
-	private ArrayList<Boolean> availableValues;
-	private ArrayList<Integer> scoreValues;
+	private ArrayList<Boolean> availableValues; //atributos disponibles
+	private ArrayList<Integer> scoreValues; //valoracion del atributo
 	
-	public Attribute(String name, int mIN, int mAX) {
+	public Attribute(String name, int mIN, int mAX, ArrayList<Boolean> availableVal, ArrayList<Integer> scoreVal) {
 		super();
 		this.name = name;
 		MIN = mIN;
 		MAX = mAX;
+		this.availableValues = availableVal;
+		this.scoreValues = scoreVal;
 	}
 
 	public String getName() {

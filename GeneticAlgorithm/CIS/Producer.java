@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 public class Producer {
 	
-	public ArrayList<Attribute> AvailableAttribute;
-	public Product product;	
+	public ArrayList<Attribute> AvailableAttribute; //atributos disponibles, que puedo modificar
+	public Product product;	//cada productor tiene un producto
 
 	public Producer() {
-		
+		super();
 	}
 
 	public Producer(ArrayList<Attribute> availableAttribute, Product product) {

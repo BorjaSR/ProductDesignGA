@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class CustomerProfile {
 	
-	private ArrayList<Attribute> scoreAttributes;
+	private ArrayList<Attribute> scoreAttributes; //cada customer profile tiene su lista de atributos
 
 	public CustomerProfile(ArrayList<Attribute> scoreAttributes) {
 		super();
