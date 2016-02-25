@@ -1,8 +1,7 @@
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -68,12 +67,12 @@ public class Main {
 												 */
 
 	/* STATISTICAL VARIABLES */
-	private static LinkedList<Integer> Results = new LinkedList<>();
-	private static LinkedList<Integer> Initial_Results = new LinkedList<>();
+	private static ArrayList<Integer> Results = new ArrayList<>();
+	private static ArrayList<Integer> Initial_Results = new ArrayList<>();
 
-	private static LinkedList<CustomerProfile> CustomerProfileList = new LinkedList<>();
-	private static LinkedList<CustomerProfile> CustomerProfileListAux = new LinkedList<>();
-	private static LinkedList<Integer> NumberCustomerProfile;
+	private static ArrayList<CustomerProfile> CustomerProfileList = new ArrayList<>();
+	private static ArrayList<CustomerProfile> CustomerProfileListAux = new ArrayList<>();
+	private static ArrayList<Integer> NumberCustomerProfile;
 
 	/***************************************
 	 * " AUXILIARY EXCEL METHODS " * @throws Exception
@@ -211,8 +210,8 @@ public class Main {
 		String msg;
 		List sheetData = new ArrayList<>();
 
-		Results = new LinkedList<Integer>();
-		Initial_Results = new LinkedList<Integer>();
+		Results = new ArrayList<Integer>();
+		Initial_Results = new ArrayList<Integer>();
 
 		Math.random();
 		if (Number_Producers == 0) {
@@ -229,7 +228,7 @@ public class Main {
 						 * product
 						 */
 			{
-				for (int j = 0; j < Producers.get(0).getAvailableAttribute().size() - 1; j++) {
+				for (int j = 0; j < Producers.get(0).getAvailableAttribute().size(); j++) {
 					@SuppressWarnings("unused")
 					Product prod = Producers.get(j).getProduct();
 					prod = createNearProduct(Producers.get(j).getAvailableAttribute(),
@@ -280,7 +279,7 @@ public class Main {
 				if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 					number_valors = cell.getNumericCellValue() + 1;
 					TotalAttributes.add(new Attribute("Attribute " + (TotalAttributes.size() + 1), MIN_VAL,
-							(int) number_valors - 1, new ArrayList<Boolean>(), new ArrayList<Integer>()));
+							(int) number_valors - 1));
 					Number_Attributes++;
 				} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
 					if (cell.getRichStringCellValue().equals("MMM"))
@@ -401,7 +400,7 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void genCustomerProfilesNum() throws Exception {
-		NumberCustomerProfile = new LinkedList<>();
+		NumberCustomerProfile = new ArrayList<>();
 		// We take the number of polled of the healthcare barometer
 		NumberCustomerProfile.add(7);
 		NumberCustomerProfile.add(16);
@@ -470,7 +469,7 @@ public class Main {
 	 */
 	private static void divideCustomerProfile() throws Exception {
 		int numOfSubProfile;
-		CustomerProfileListAux = new LinkedList<CustomerProfile>();
+		CustomerProfileListAux = new ArrayList<CustomerProfile>();
 		for (int i = 0; i < CustomerProfileList.size(); i++) {
 			CustomerProfileListAux.add(new CustomerProfile(new ArrayList<Attribute>()));
 			numOfSubProfile = NumberCustomerProfile.get(i) / RESP_PER_GROUP; // NumberCustomerProfile.get(i)
@@ -478,12 +477,12 @@ public class Main {
 			{
 				numOfSubProfile++;
 			}
-			for (int j = 0; j < numOfSubProfile - 1; j++) // We divide into
-															// sub-profiles
+			for (int j = 0; j < numOfSubProfile; j++) // We divide into
+															// sub-profiles   - 1
 			{
 				CustomerProfileListAux.get(i).getScoreAttributes()
 						.add(new Attribute(TotalAttributes.get(j).getName(), TotalAttributes.get(j).getMIN(),
-								TotalAttributes.get(j).getMAX(), new ArrayList<Boolean>(), new ArrayList<Integer>()));
+								TotalAttributes.get(j).getMAX()));
 				for (int k = 0; k < Number_Attributes - 1; k++) // Each of the
 																// sub-profiles
 																// choose a
@@ -512,7 +511,7 @@ public class Main {
 		double accumulated = 0;
 		try {
 			for (int i = 0; i < CustomerProfileList.get(custProfInd).getScoreAttributes().get(attrInd).getScoreValues()
-					.size() - 1; i++) {
+					.size(); i++) {
 				total += CustomerProfileList.get(custProfInd).getScoreAttributes().get(attrInd).getScoreValues().get(i);
 			}
 		} catch (Exception e) {
@@ -535,6 +534,7 @@ public class Main {
 			throw new Exception("Error 2 in chooseValueForAttribute() method: Value not found");
 		return value;
 	}
+	
 
 	/** Creating available attributes for the producer */
 	private static ArrayList<Attribute> createAvailableAttributes() {
@@ -544,7 +544,7 @@ public class Main {
 		/* All producers know the first ATTRIBUTES_KNOWN % of the attributes */
 		for (int i = 0; i < limit - 1; i++) {
 			Attribute attr = new Attribute(TotalAttributes.get(i).getName(), TotalAttributes.get(i).getMIN(),
-					TotalAttributes.get(i).getMAX(), new ArrayList<Boolean>(), new ArrayList<Integer>());
+					TotalAttributes.get(i).getMAX());
 			ArrayList<Boolean> values = new ArrayList<>();
 			for (int j = 0; j < attr.getMAX(); j++) {
 				values.add(true);
@@ -558,9 +558,9 @@ public class Main {
 		 * The remaining attributes are only known by SPECIAL_ATTRIBUTES %
 		 * producers
 		 */
-		for (int k = limit; k < TotalAttributes.size() - 1; k++) {
+		for (int k = limit; k < TotalAttributes.size(); k++) {
 			Attribute attr = new Attribute(TotalAttributes.get(k).getName(), TotalAttributes.get(k).getMIN(),
-					TotalAttributes.get(k).getMAX(), new ArrayList<Boolean>(), new ArrayList<Integer>());
+					TotalAttributes.get(k).getMAX());
 			ArrayList<Boolean> values = new ArrayList<>();
 
 			for (int j = 0; j < attr.getMAX(); j++) {
@@ -657,7 +657,7 @@ public class Main {
 			 * attrInd value i
 			 */
 			possibleAttr.add(0);
-			for (int j = 0; j < custProfInd.size() - 1; j++) {
+			for (int j = 0; j < custProfInd.size(); j++) {
 				int possible = possibleAttr.get(i);
 				possible += CustomerProfileList.get(custProfInd.get(j)).getScoreAttributes().get(attrInd)
 						.getScoreValues().get(i);
@@ -676,7 +676,7 @@ public class Main {
 	private static int getMaxAttrVal(int attrInd, ArrayList<Integer> possibleAttr, ArrayList<Attribute> availableAttr) {
 		int attrVal = -1;
 		double max = -1;
-		for (int i = 0; i < possibleAttr.size() - 1; i++) {
+		for (int i = 0; i < possibleAttr.size(); i++) {
 			if (availableAttr.get(attrInd).getAvailableValues().get(i) && possibleAttr.get(i) > max) {
 				max = possibleAttr.get(i);
 				attrVal = i;
@@ -778,17 +778,17 @@ public class Main {
 		int score = 0;
 		for (int i = 0; i < TotalAttributes.size(); i++) {
 
-			try {
+		//	try {
 				score += scoreAttribute(
-						TotalAttributes.get(custProfInd).getScoreValues().get(i), CustomerProfileListAux
+						TotalAttributes.get(i).getScoreValues().size(), CustomerProfileListAux
 								.get(custProfInd).getScoreAttributes().get(custSubProfInd).getScoreValues().get(i),
 						product.getAttributeValue().get(i));//////////
 				// score += scoreAttribute(mAttributes(i),
 				// mCustProfAux(custProfInd)(custSubProfInd)(i), product(i))
 
-			} catch (Exception e) {
+		/*	} catch (Exception e) {
 				System.out.println(e);
-			}
+			}*/
 		}
 		return score;
 	}
@@ -886,7 +886,7 @@ public class Main {
 	/** Computing the sum of the fitness of all the population */
 	private static int computeFitnessSum() {
 		int sum = 0;
-		for (int i = 0; i < Fitness.size() - 1; i++) {
+		for (int i = 0; i < Fitness.size(); i++) {
 			sum += Fitness.get(i);
 		}
 		return sum;
