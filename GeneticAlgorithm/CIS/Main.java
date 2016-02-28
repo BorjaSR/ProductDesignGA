@@ -222,7 +222,7 @@ public class Main {
 			generateProducers();
 		}
 
-		for (int i = 0; i < NUM_EXECUTIONS - 1; i++) {
+		for (int i = 0; i < NUM_EXECUTIONS; i++) {
 			if (i != 0) /*
 						 * We reset myPP and create a new product as the first
 						 * product
@@ -266,7 +266,7 @@ public class Main {
 	/*************************************** " AUXILIARY METHODS GENERATEINPUT()" ***************************************/
 
 	/** Creating the attributes and the possible values of them */
-	private static void generateAttributeValor(List sheetData) {
+private static void generateAttributeValor(List sheetData) {
 
 		int MIN_VAL = 1;
 
@@ -342,7 +342,7 @@ public class Main {
 	}
 
 	/** Generating the producers */
-	private static void generateProducers() {
+private static void generateProducers() {
 		Producers = new ArrayList<>();
 		for (int i = 0; i < Number_Producers; i++) {
 			Producer new_producer = new Producer();
@@ -353,7 +353,7 @@ public class Main {
 	}
 
 	/** Creating different customer profiles */
-	private static void generateCustomerProfiles() {
+private static void generateCustomerProfiles() {
 
 		// Generate 4 random Customer Profile
 		for (int i = 0; i < 4; i++) {
@@ -483,7 +483,7 @@ public class Main {
 				CustomerProfileListAux.get(i).getScoreAttributes()
 						.add(new Attribute(TotalAttributes.get(j).getName(), TotalAttributes.get(j).getMIN(),
 								TotalAttributes.get(j).getMAX()));
-				for (int k = 0; k < Number_Attributes - 1; k++) // Each of the
+				for (int k = 0; k < Number_Attributes; k++) // Each of the
 																// sub-profiles
 																// choose a
 																// value for
@@ -537,7 +537,7 @@ public class Main {
 	
 
 	/** Creating available attributes for the producer */
-	private static ArrayList<Attribute> createAvailableAttributes() {
+private static ArrayList<Attribute> createAvailableAttributes() {
 		ArrayList<Attribute> availableAttributes = new ArrayList<>();
 		int limit = Number_Attributes * KNOWN_ATTRIBUTES / 100;
 
@@ -607,7 +607,7 @@ public class Main {
 	}
 
 	/** Creating a product near various customer profiles */
-	private static Product createNearProduct(ArrayList<Attribute> availableAttribute, int nearCustProfs) {
+private static Product createNearProduct(ArrayList<Attribute> availableAttribute, int nearCustProfs) {
 		/* TODO: improve having into account the sub-profiles */
 		Product product = new Product(new HashMap<Attribute, Integer>(), 0);
 		int limit = (Number_Attributes * KNOWN_ATTRIBUTES) / 100;
@@ -649,20 +649,24 @@ public class Main {
 	private static int chooseAttribute(int attrInd, ArrayList<Integer> custProfInd,
 			ArrayList<Attribute> availableAttrs) {
 		int attrVal;
-		ArrayList<Integer> possibleAttr = new ArrayList<Integer>();
+		int possible;
+		int nuevo = 0;
+		ArrayList<Integer> possibleAttr = new ArrayList<>();
 
-		for (int i = 0; i < availableAttrs.get(attrInd).getAvailableValues().size() - 1; i++) {
+		for (int i = 0; i < availableAttrs.get(attrInd).getAvailableValues().size(); i++) {
 			/*
 			 * We count the valoration of each selected profile for attribute
 			 * attrInd value i
 			 */
 			possibleAttr.add(0);
 			for (int j = 0; j < custProfInd.size(); j++) {
-				int possible = possibleAttr.get(i);
-				possible += CustomerProfileList.get(custProfInd.get(j)).getScoreAttributes().get(attrInd)
+				
+				possible = possibleAttr.get(i);
+				nuevo =  possible + CustomerProfileList.get(custProfInd.get(j)).getScoreAttributes().get(attrInd)
 						.getScoreValues().get(i);
 
 			}
+			possibleAttr.set(i, nuevo);
 		}
 		attrVal = getMaxAttrVal(attrInd, possibleAttr, availableAttrs);
 
@@ -675,7 +679,7 @@ public class Main {
 	 */
 	private static int getMaxAttrVal(int attrInd, ArrayList<Integer> possibleAttr, ArrayList<Attribute> availableAttr) {
 		int attrVal = -1;
-		double max = -1;
+		int max = -1;
 		for (int i = 0; i < possibleAttr.size(); i++) {
 			if (availableAttr.get(attrInd).getAvailableValues().get(i) && possibleAttr.get(i) > max) {
 				max = possibleAttr.get(i);
@@ -693,15 +697,15 @@ public class Main {
 	 * @throws Exception
 	 */
 	private static void createInitPopu() throws Exception {
-		Population = new ArrayList<Product>();
-		Fitness = new ArrayList<Integer>();
+		Population = new ArrayList<>();
+		Fitness = new ArrayList<>();
 
 		Population.add((Producers.get(0).getProduct()).clone());
 		Fitness.add(computeWSC(Population.get(0), 0));
 		BestWSC = Fitness.get(0);
 		Initial_Results.add(BestWSC);
 
-		for (int i = 1; i < NUM_POPULATION - 1; i++) {
+		for (int i = 1; i < NUM_POPULATION; i++) {
 			if (i % 2 == 0) /* We create a random product */
 				Population.add(createRndProduct(Producers.get(0).getAvailableAttribute()));
 			else /* We create a near product */
@@ -733,7 +737,7 @@ public class Main {
 		int score;
 		int k;
 		int numTies;
-		for (int i = 0; i < Number_CustomerProfile - 1; i++) {
+		for (int i = 0; i < Number_CustomerProfile; i++) {
 			for (int j = 0; j < CustomerProfileListAux.size(); j++) // CustomerProfileListAux.get(i).getScoreAttributes().size()
 			{
 				isTheFavourite = true;
@@ -778,7 +782,7 @@ public class Main {
 		int score = 0;
 		for (int i = 0; i < TotalAttributes.size(); i++) {
 
-		//	try {
+			//try {
 				score += scoreAttribute(
 						TotalAttributes.get(i).getScoreValues().size(), CustomerProfileListAux
 								.get(custProfInd).getScoreAttributes().get(custSubProfInd).getScoreValues().get(i),
@@ -786,7 +790,7 @@ public class Main {
 				// score += scoreAttribute(mAttributes(i),
 				// mCustProfAux(custProfInd)(custSubProfInd)(i), product(i))
 
-		/*	} catch (Exception e) {
+			/*} catch (Exception e) {
 				System.out.println(e);
 			}*/
 		}
@@ -871,7 +875,7 @@ public class Main {
 		Product son; // ArrayList<Product>
 
 		// newFitness = new ArrayList<Integer>();
-		for (int i = 0; i < NUM_POPULATION - 1; i++) {
+		for (int i = 0; i < NUM_POPULATION; i++) {
 			father = chooseFather(fitnessSum);
 			mother = chooseFather(fitnessSum);
 			son = mutate(breed(father, mother));
@@ -923,7 +927,7 @@ public class Main {
 			for (int i = 0; i < Fitness.size(); i++) // With
 																			// son
 			{
-				for (int j = 0; j < Number_Attributes - 1; j++) {
+				for (int j = 0; j < Number_Attributes; j++) {
 					rndVal = (int) (2
 							* Math.random()); /*
 												 * Generamos aleatoriamente un 0
@@ -965,7 +969,7 @@ public class Main {
 
 		for (int i = 0; i < Fitness.size(); i++)// with
 																			// mutant
-			for (int j = 0; j < Number_Attributes - 1; j++) {
+			for (int j = 0; j < Number_Attributes; j++) {
 				/* Random value in range [0,100) */
 				mutation = 100 * Math.random();
 				if (mutation <= MUTATION_PROB) {
@@ -992,7 +996,7 @@ public class Main {
 	private static ArrayList<Product> tournament(ArrayList<Product> newPopu, ArrayList<Integer> newFitness) {
 
 		ArrayList<Product> nextGeneration = new ArrayList<Product>();
-		for (int i = 0; i < NUM_POPULATION - 1; i++) {
+		for (int i = 0; i < NUM_POPULATION; i++) {
 			if (Fitness.get(i) >= newFitness.get(i))
 				nextGeneration.add((Population.get(i)).clone());
 			else
@@ -1018,7 +1022,7 @@ public class Main {
 		int wsc;
 		int wscSum = 0;
 		// int custSum = 0;
-		for (int i = 0; i < Number_Producers - 1; i++) {
+		for (int i = 0; i < Number_Producers; i++) {
 			wsc = computeWSC(Producers.get(i).getProduct(), i);
 			wscSum += wsc;
 		}
@@ -1037,7 +1041,7 @@ public class Main {
 	/** Computing the variance */
 	private static double computeVariance(double mean) {
 		double sqrSum = 0;
-		for (int i = 0; i < NUM_EXECUTIONS - 1; i++) {
+		for (int i = 0; i < NUM_EXECUTIONS; i++) {
 			sqrSum += Math.pow(Results.get(i) - mean, 2);
 		}
 		return (sqrSum / NUM_EXECUTIONS);
